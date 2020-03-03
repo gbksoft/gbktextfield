@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		CE4D144A240E5662003E6859 /* GBKSoftTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D1448240E5662003E6859 /* GBKSoftTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE4D1451240E57F1003E6859 /* GBKSoftTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4D1450240E57F1003E6859 /* GBKSoftTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		CE4D1445240E5662003E6859 /* GBKSoftTextField.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GBKSoftTextField.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE4D1448240E5662003E6859 /* GBKSoftTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBKSoftTextField.h; sourceTree = "<group>"; };
 		CE4D1449240E5662003E6859 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE4D1450240E57F1003E6859 /* GBKSoftTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GBKSoftTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +48,7 @@
 		CE4D1447240E5662003E6859 /* GBKSoftTextField */ = {
 			isa = PBXGroup;
 			children = (
+				CE4D1450240E57F1003E6859 /* GBKSoftTextField.swift */,
 				CE4D1448240E5662003E6859 /* GBKSoftTextField.h */,
 				CE4D1449240E5662003E6859 /* Info.plist */,
 			);
@@ -95,6 +98,7 @@
 				TargetAttributes = {
 					CE4D1444240E5662003E6859 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 				};
 			};
@@ -131,6 +135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D1451240E57F1003E6859 /* GBKSoftTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +265,7 @@
 		CE4D144E240E5662003E6859 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = L7XDW9NEX9;
@@ -276,6 +282,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gbksoft.GBKSoftTextField;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -284,6 +291,7 @@
 		CE4D144F240E5662003E6859 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = L7XDW9NEX9;
