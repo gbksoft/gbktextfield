@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-public class GBKSoftTextField: UITextField {
+open class GBKSoftTextField: UITextField {
 
     // MARK: - Views
 
@@ -136,7 +136,7 @@ public class GBKSoftTextField: UITextField {
         setupView()
     }
 
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
     }

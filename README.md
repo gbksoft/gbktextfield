@@ -59,12 +59,12 @@ $ pod install
 ## Properties
 
 | Property | Type | Default value | Description | @IBInspectable |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | :---: |
 | textPadding | CGSize | (width: 0, height: 10) | Отступы поля ввода от краев | [x] |
 | errorPadding | CGSize | (width: 0, height: 10) | Отступы для текста с ошибкой | [x] |
 | underlineHeight | CGFloat | 1 | Высота подчеркивания по умолчанию | [x] |
 | underlineEditingHeight | CGFloat | 2 | Высота подчеркивания у активного поля | [x] |
-| underlineErrorHeight | CGFloat | 1 | Высота подчеркивания у поля с ошибкой | [x] |
+| underlineErrorHeight | CGFloat | 2 | Высота подчеркивания у поля с ошибкой | [x] |
 | placeholderColor | UIColor | UIColor.gray | Цвет плейсхолдера/тайтла для поля | [x] |
 | errorColor | UIColor | UIColor.red | Цвет текста сообщения об ошибке и подчеркивания у поля с ошибкой | [x] |
 | underlineColor | UIColor | UIColor.gray | Цвет подчеркивания по умолчанию | [x] |
@@ -72,8 +72,8 @@ $ pod install
 | error | String | nil | Текст ошибки. Если `error == nil` то текст ошибки не отображается и подчеркивание имеет цвет по умолчанию | [x] |
 | isInline | Bool | false | Режим отображения поля. [Подробнее](#isInline)  | [x] |
 | inlineFieldOffset | CGFloat | 100 | Определяет ширину плейсхолдера/тайтла в инлайн режиме | [x] |
-| placeholderFont | UIFont | nil | Шрифт плейсхолдера/тайтла. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [ ] |
-| errorFont | UIFont | nil | Шрифт  сообщения об ошибке. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [ ] |
+| placeholderFont | UIFont | nil | Шрифт плейсхолдера/тайтла. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
+| errorFont | UIFont | nil | Шрифт  сообщения об ошибке. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
 | placeholderAnimated | Bool | false | Определяет наличие анимации у перемещения плейсхолдера в тайтл и обратно  | [x] |
 | errorAnimated | Bool | false | Определяет наличие анимации у появления/скрытия текста ошибки | [x] |
 
