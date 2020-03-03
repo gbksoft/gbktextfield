@@ -1,5 +1,7 @@
 # GBKSoft UITextField
 
+![Preview](/Media/preview.png)
+
 Реализация UITextField схожий с Material созданный согласно требоний реализуемых в команде проектов 
 
 - [Requirements](#requirements)
@@ -58,6 +60,8 @@ $ pod install
 
 ## Properties
 
+![Properties](/Media/attributes.png)
+
 | Property | Type | Default value | Description | @IBInspectable |
 | --- | --- | --- | --- | :---: |
 | textPadding | CGSize | (width: 0, height: 10) | Отступы поля ввода от краев | [x] |
@@ -86,9 +90,13 @@ $ pod install
 
 #### isInline == false (default)
 
+![Default example](/Media/example-default.png)
+
 По умолчанию у незаполненного поля видим только плейсхолдер и подчеркивание. При изменении значения поля плейсхолдер скрывается и появляется тайтл. Тайтл и полея для ввода расположены один над другим вертикально
 
 #### isInline == true
+
+![Inline example](/Media/example-inline.png)
 
 В инлайн режиме плейсхолдер/тайтл неподвижен. Тайтл и поле для ввода один за другим горизонтально
 

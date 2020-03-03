@@ -321,7 +321,6 @@ extension GBKSoftTextField {
 
     private func showPlaceholderLabel(animated: Bool) {
         if shouldShowPlaceholder {
-            super.placeholder = nil
             attributedPlaceholder = nil
         }
         if !placeholderIsHidden || placeholderAnimating {
@@ -364,7 +363,7 @@ extension GBKSoftTextField {
             self.superview?.layoutIfNeeded()
         }) { (_) in
             self.placeholderAnimating = false
-            super.placeholder = self.currentPlaceholder
+            self.updateAttributedPlaceholder()
             if self.shouldShowPlaceholder {
                 self.showPlaceholderLabel(animated: false)
             }
