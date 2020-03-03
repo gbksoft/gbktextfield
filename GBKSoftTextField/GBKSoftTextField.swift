@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-class GBKSoftTextField: UITextField {
+public class GBKSoftTextField: UITextField {
 
     // MARK: - Views
 
@@ -61,25 +61,25 @@ class GBKSoftTextField: UITextField {
 
     @IBInspectable var inlineFieldOffset: CGFloat = 100
 
-    var placeholderFont: UIFont? {
+    public var placeholderFont: UIFont? {
         didSet {
             updatePlaceholderFont()
         }
     }
-    var errorFont: UIFont? {
+    public var errorFont: UIFont? {
         didSet {
             updateErrorFont()
         }
     }
 
-    override var placeholder: String? {
+    override public var placeholder: String? {
         didSet {
             currentPlaceholder = placeholder
             updatePlaceholderText()
         }
     }
 
-    override var font: UIFont? {
+    override public var font: UIFont? {
         didSet {
             updateErrorLabelPosition()
             updateFonts()
@@ -141,7 +141,7 @@ class GBKSoftTextField: UITextField {
         setupView()
     }
 
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         layoutUnderline()
         layoutPlaceholderLabel(animated: placeholderAnimated)
         layoutErrorLabel(animated: errorAnimated)
@@ -154,7 +154,7 @@ class GBKSoftTextField: UITextField {
 
 extension GBKSoftTextField {
 
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
+    override public func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
         var left: CGFloat
         var top: CGFloat
@@ -170,15 +170,15 @@ extension GBKSoftTextField {
         return CGRect(x: left, y: top, width: width, height: font!.lineHeight)
     }
 
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    override public func editingRect(forBounds bounds: CGRect) -> CGRect {
         return textRect(forBounds: bounds)
     }
 
-    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         return textRect(forBounds: bounds)
     }
 
-    override var intrinsicContentSize: CGSize {
+    override public var intrinsicContentSize: CGSize {
         var intrinsicSize = super.intrinsicContentSize
         if !withError {
             intrinsicSize.height = underlineLayer.frame.maxY
