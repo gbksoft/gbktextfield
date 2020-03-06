@@ -80,6 +80,9 @@ $ pod install
 | errorFont | UIFont | nil | Шрифт  сообщения об ошибке. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
 | placeholderAnimated | Bool | false | Определяет наличие анимации у перемещения плейсхолдера в тайтл и обратно  | [x] |
 | errorAnimated | Bool | false | Определяет наличие анимации у появления/скрытия текста ошибки | [x] |
+| buttonVisible | Bool | false | Определяет видимость кнопки справа | [x] |
+| buttonImage | UIImage | nil | Иконка кнопки | [x] |
+| buttonTintColor | UIColor | UIColor.gray | Цвет иконки. Изображение рисуется в режиме template | [x] |
 
 
 ## Additional Info
@@ -101,8 +104,27 @@ $ pod install
 В инлайн режиме плейсхолдер/тайтл неподвижен. Тайтл и поле для ввода один за другим горизонтально
 
 
+## Delegate 
+
+Для обработки нажатия на кнопку необходимо к полу привязать `textFieldDelegate` протокола `GBKSoftTextFieldDelegate` вместо стандартного `UITextFieldDelegate`
+
+#### Xib
+![Inline example](/Media/delegate1.png)
+![Inline example](/Media/delegate2.png)
+
+#### Code
+```swift
+    ...
+    firstNameTextField.textFieldDelegate = self
+    ...
+```
+
+Помимо стандартным методов этот протокол содержит метод 
+```swift
+func textFieldDidTapButton(_ textField: UITextField)
+```
+который вызывается по нажатию на кнопку
+
 ## ToDo
 
 - [ ] добавить поддержку многострочности путем наследования от UITextView
-- [ ] добавить возможность указывать title отличный от placeholder
-- [ ] добавить кастомизируемую кнопку как left attribute (например для показать/скрыть пароль)

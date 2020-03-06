@@ -13,9 +13,10 @@ open class GBKSoftTextField: UITextField {
 
     // MARK: - Views
 
-    private let placeholderLabel = UILabel()
+    private let titleLabel = UILabel()
     private let errorLabel = UILabel()
     private let underlineLayer = CALayer()
+    private let rightButton = UIButton()
 
     // MARK: - IBInspectable
 
@@ -31,13 +32,16 @@ open class GBKSoftTextField: UITextField {
             updatePlaceholderColor()
         }
     }
-    @IBInspectable var placeholderAnimated: Bool = false
+    @IBInspectable var titleColor: UIColor = .gray {
+        didSet {
+            updateTitleColor()
+        }
+    }
     @IBInspectable var errorColor: UIColor = .red {
         didSet {
             layoutUnderline()
         }
     }
-    @IBInspectable var errorAnimated: Bool = false
     @IBInspectable var underlineColor: UIColor = .gray {
         didSet {
             updateErrorColor()
@@ -47,6 +51,15 @@ open class GBKSoftTextField: UITextField {
     @IBInspectable var underlineEditingColor: UIColor = .blue {
         didSet {
             layoutUnderline()
+        }
+    }
+
+    @IBInspectable var titleAnimated: Bool = false
+    @IBInspectable var errorAnimated: Bool = false
+
+    @IBInspectable var title: String? {
+        didSet {
+            updateTitleText()
         }
     }
 
@@ -61,11 +74,34 @@ open class GBKSoftTextField: UITextField {
 
     @IBInspectable var inlineFieldOffset: CGFloat = 100
 
+    @IBInspectable var buttonVisible: Bool = false {
+        didSet { toggleButtonVisibility() }
+    }
+    @IBInspectable var buttonImage: UIImage? {
+        didSet { rightButton.setImage(buttonImage, for: .normal) }
+    }
+    @IBInspectable var buttonTintColor: UIColor = .gray {
+        didSet { rightButton.tintColor = buttonTintColor }
+    }
+
+    @IBOutlet public weak var textFieldDelegate: GBKSoftTextFieldDelegate? {
+        didSet {
+            self.delegate = textFieldDelegate
+        }
+    }
+
+    public var titleFont: UIFont? {
+        didSet {
+            updateTitleFont()
+        }
+    }
+
     public var placeholderFont: UIFont? {
         didSet {
             updatePlaceholderFont()
         }
     }
+
     public var errorFont: UIFont? {
         didSet {
             updateErrorFont()
@@ -75,7 +111,8 @@ open class GBKSoftTextField: UITextField {
     override public var placeholder: String? {
         didSet {
             currentPlaceholder = placeholder
-            updatePlaceholderText()
+            hasPlaceholder = placeholder != nil
+            updateAttributedPlaceholder()
         }
     }
 
@@ -92,11 +129,13 @@ open class GBKSoftTextField: UITextField {
 
     private var placeholderAnimating: Bool = false
     private var placehoderLabelTopConstraint: NSLayoutConstraint!
+    private var hasPlaceholder: Bool = false
 
     private var errorAnimating: Bool = false
     private var errorLabelTopConstraint: NSLayoutConstraint!
     private var errorLabelZeroHeightConstraint: NSLayoutConstraint!
 
+    private var currentTitleFont: UIFont?
     private var currentPlaceholderFont: UIFont?
     private var currentErrorFont: UIFont?
 
@@ -112,18 +151,23 @@ open class GBKSoftTextField: UITextField {
         return error != nil && error!.count > 0
     }
 
-    private var shouldShowPlaceholder: Bool {
+    private var shouldShowTitle: Bool {
         let isEmpty = text == nil || text?.count == 0
-        return !isEmpty || isFirstResponder
+        return hasPlaceholder || !isEmpty || isFirstResponder
     }
 
-    private var placeholderIsHidden: Bool {
-        return placeholderLabel.alpha == 0
+    private var titleIsHidden: Bool {
+        return titleLabel.alpha == 0
+    }
+
+    private var defaultTitleFont: UIFont? {
+        return font?.withSize(UIFont.labelFontSize)
     }
 
     private var defaultPlaceholderFont: UIFont? {
-        return font?.withSize(UIFont.labelFontSize)
+        return font?.withSize(UIFont.systemFontSize)
     }
+
 
     private var defaultErrorFont: UIFont? {
         return font?.withSize(UIFont.labelFontSize)
@@ -143,7 +187,7 @@ open class GBKSoftTextField: UITextField {
 
     override public func layoutSubviews() {
         layoutUnderline()
-        layoutPlaceholderLabel(animated: placeholderAnimated)
+        layoutTitleLabel(animated: titleAnimated)
         layoutErrorLabel(animated: errorAnimated)
         super.layoutSubviews()
     }
@@ -167,6 +211,12 @@ extension GBKSoftTextField {
             top = ceil(textPadding.height) + currentPlaceholderFont!.lineHeight
             left = rect.origin.x
         }
+        left += textPadding.width
+        width -= 2 * textPadding.width
+        if buttonVisible {
+            width -= rightButton.bounds.width
+        }
+
         return CGRect(x: left, y: top, width: width, height: font!.lineHeight)
     }
 
@@ -198,15 +248,19 @@ extension GBKSoftTextField {
         setupDefaults()
         setupTextField()
         setupUnderline()
-        setupPlaceholderLabel()
+        setupTitleLabel()
         setupErrorLabel()
+        setupRightButton()
+        updateAttributedPlaceholder()
         invalidateIntrinsicContentSize()
     }
 
     private func setupDefaults() {
         self.currentPlaceholderFont = placeholderFont ?? defaultPlaceholderFont
         self.currentErrorFont = errorFont ?? defaultErrorFont
+        self.titleFont = titleFont ?? defaultTitleFont
         self.currentPlaceholder = placeholder
+        self.hasPlaceholder = placeholder != nil
     }
 
     private func setupTextField() {
@@ -221,6 +275,7 @@ extension GBKSoftTextField {
     }
 
     private func updateFonts() {
+        updateTitleFont()
         updatePlaceholderFont()
         updateErrorFont()
     }
@@ -245,31 +300,16 @@ extension GBKSoftTextField {
 
     // MARK: - Placeholder
 
-    private func setupPlaceholderLabel() {
-        placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
-        placeholderLabel.textAlignment = textAlignment
-        placeholderLabel.font = currentPlaceholderFont
-        updatePlaceholderText()
-        updatePlaceholderColor()
-        addSubview(placeholderLabel)
-        setupPlaceholderConstraints()
-        layoutPlaceholderLabel(animated: false)
-        invalidateIntrinsicContentSize()
-    }
-
     private func updatePlaceholderFont() {
         currentPlaceholderFont = placeholderFont ?? defaultPlaceholderFont
-        placeholderLabel.font = currentPlaceholderFont
+        titleLabel.font = currentPlaceholderFont
         updatePlaceholderText()
     }
 
     private func updatePlaceholderText() {
-        if placeholderIsHidden {
+        if titleIsHidden || currentPlaceholder != nil {
             updateAttributedPlaceholder()
         }
-        placeholderLabel.text = placeholder
-        placeholderLabel.sizeToFit()
-        invalidateIntrinsicContentSize()
     }
 
     private func updateAttributedPlaceholder() {
@@ -279,24 +319,56 @@ extension GBKSoftTextField {
         ])
     }
 
-    private func updatePlaceholderColor() {
-        placeholderLabel.textColor = placeholderColor
+
+    // MARK: - Title
+
+    private func setupTitleLabel() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textAlignment = textAlignment
+        titleLabel.font = currentTitleFont
+        updateTitleText()
+        updateTitleColor()
+        addSubview(titleLabel)
+        setupTitleConstraints()
+        layoutTitleLabel(animated: false)
+        invalidateIntrinsicContentSize()
     }
 
-    private func setupPlaceholderConstraints() {
-        clearPlaceholderConstraints()
-        placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: textPadding.width).isActive = true
+    private func updateTitleFont() {
+        currentTitleFont = titleFont ?? defaultTitleFont
+        titleLabel.font = currentTitleFont
+        updateTitleText()
+    }
+
+    private func updateTitleText() {
+        titleLabel.text = title
+        titleLabel.sizeToFit()
+        invalidateIntrinsicContentSize()
+    }
+
+
+    private func updateTitleColor() {
+        titleLabel.textColor = titleColor
+    }
+
+    private func updatePlaceholderColor() {
+        titleLabel.textColor = placeholderColor
+    }
+
+    private func setupTitleConstraints() {
+        clearTitleConstraints()
+        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: textPadding.width).isActive = true
         if isInline {
-            placeholderLabel.widthAnchor.constraint(equalToConstant: inlineFieldOffset).isActive = true
+            titleLabel.widthAnchor.constraint(equalToConstant: inlineFieldOffset).isActive = true
         } else {
-            placeholderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: textPadding.width).isActive = true
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: textPadding.width).isActive = true
         }
-        placehoderLabelTopConstraint = placeholderLabel.topAnchor.constraint(equalTo: topAnchor)
+        placehoderLabelTopConstraint = titleLabel.topAnchor.constraint(equalTo: topAnchor)
         placehoderLabelTopConstraint.isActive = true
     }
 
-    private func clearPlaceholderConstraints() {
-        placeholderLabel.removeConstraints(placeholderLabel.constraints)
+    private func clearTitleConstraints() {
+        titleLabel.removeConstraints(titleLabel.constraints)
         constraints.forEach { (constraint) in
             if let first = constraint.firstItem as? UILabel, first == self {
                 self.removeConstraint(constraint)
@@ -308,50 +380,55 @@ extension GBKSoftTextField {
         }
     }
 
-    private func layoutPlaceholderLabel(animated: Bool) {
-        if shouldShowPlaceholder {
+    private func layoutTitleLabel(animated: Bool) {
+        if shouldShowTitle {
             updatePlaceholderColor()
-            showPlaceholderLabel(animated: animated)
+            showTitleLabel(animated: animated)
         } else {
             if !isInline {
-                hidePlaceholderLabel(animated: animated)
+                hideTitleLabel(animated: animated)
             }
         }
     }
 
-    private func showPlaceholderLabel(animated: Bool) {
-        if shouldShowPlaceholder {
+    private func showTitleLabel(animated: Bool) {
+        if shouldShowTitle && !hasPlaceholder {
+            currentPlaceholder = nil
             attributedPlaceholder = nil
         }
-        if !placeholderIsHidden || placeholderAnimating {
+        if !titleIsHidden || placeholderAnimating {
             return
         }
 
         guard animated else {
-            self.placeholderLabel.alpha = 1
+            self.titleLabel.alpha = 1
             return
         }
 
         superview?.layoutIfNeeded()
         placeholderAnimating = true
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
-            self.placeholderLabel.alpha = 1
+            self.titleLabel.alpha = 1
             self.superview?.layoutIfNeeded()
         }) { (_) in
             self.placeholderAnimating = false
-            if !self.shouldShowPlaceholder {
-                self.hidePlaceholderLabel(animated: false)
+            if !self.shouldShowTitle {
+                self.hideTitleLabel(animated: false)
             }
         }
     }
 
-    private func hidePlaceholderLabel(animated: Bool) {
-        if placeholderIsHidden || placeholderAnimating {
+    private func hideTitleLabel(animated: Bool) {
+        if titleIsHidden || placeholderAnimating {
             return
         }
 
+        if !hasPlaceholder {
+            currentPlaceholder = title
+        }
+
         guard animated else {
-            placeholderLabel.alpha = 0
+            titleLabel.alpha = 0
             updateAttributedPlaceholder()
             return
         }
@@ -359,13 +436,13 @@ extension GBKSoftTextField {
         superview?.layoutIfNeeded()
         placeholderAnimating = true
         UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
-            self.placeholderLabel.alpha = 0
+            self.titleLabel.alpha = 0
             self.superview?.layoutIfNeeded()
         }) { (_) in
             self.placeholderAnimating = false
             self.updateAttributedPlaceholder()
-            if self.shouldShowPlaceholder {
-                self.showPlaceholderLabel(animated: false)
+            if self.shouldShowTitle {
+                self.showTitleLabel(animated: false)
             }
         }
     }
@@ -498,4 +575,33 @@ extension GBKSoftTextField {
     private func updateErrorLabelPosition() {
         errorLabelTopConstraint?.constant = topErrorPadding(hidden: !withError)
     }
+
+    // MARK: Button
+
+    private func setupRightButton() {
+        rightButton.setImage(buttonImage?.withRenderingMode(.alwaysTemplate), for: .normal)
+        rightButton.tintColor = buttonTintColor
+        rightButton.imageView?.contentMode = .scaleAspectFit
+        rightButton.addTarget(self, action: #selector(didTapButton(sender:)), for: .touchUpInside)
+        addSubview(rightButton)
+        setupRightButtonConstraints()
+        toggleButtonVisibility()
+    }
+
+    @objc private func didTapButton(sender: AnyObject) {
+        self.textFieldDelegate?.textFieldDidTapButton?(self)
+    }
+
+    private func setupRightButtonConstraints() {
+        rightButton.translatesAutoresizingMaskIntoConstraints = false
+        rightButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        rightButton.topAnchor.constraint(equalTo: topAnchor, constant: textRect.minY).isActive = true
+        rightButton.heightAnchor.constraint(equalToConstant: textRect.height).isActive = true
+
+    }
+
+    private func toggleButtonVisibility() {
+        rightButton.isHidden = !buttonVisible
+    }
+
 }
