@@ -78,10 +78,10 @@ open class GBKSoftTextField: UITextField {
         didSet { toggleButtonVisibility() }
     }
     @IBInspectable var buttonImage: UIImage? {
-        didSet { rightButton.setImage(buttonImage, for: .normal) }
+        didSet { updateRightButtonImage() }
     }
     @IBInspectable var buttonTintColor: UIColor = .gray {
-        didSet { rightButton.tintColor = buttonTintColor }
+        didSet { updateRightButtonTintColor() }
     }
 
     @IBOutlet public weak var textFieldDelegate: GBKSoftTextFieldDelegate? {
@@ -579,9 +579,9 @@ extension GBKSoftTextField {
     // MARK: Button
 
     private func setupRightButton() {
-        rightButton.setImage(buttonImage?.withRenderingMode(.alwaysTemplate), for: .normal)
-        rightButton.tintColor = buttonTintColor
         rightButton.imageView?.contentMode = .scaleAspectFit
+        updateRightButtonImage()
+        updateRightButtonTintColor()
         rightButton.addTarget(self, action: #selector(didTapButton(sender:)), for: .touchUpInside)
         addSubview(rightButton)
         setupRightButtonConstraints()
@@ -597,7 +597,14 @@ extension GBKSoftTextField {
         rightButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         rightButton.topAnchor.constraint(equalTo: topAnchor, constant: textRect.minY).isActive = true
         rightButton.heightAnchor.constraint(equalToConstant: textRect.height).isActive = true
+    }
 
+    private func updateRightButtonImage() {
+        rightButton.setImage(buttonImage?.withRenderingMode(.alwaysTemplate), for: .normal)
+    }
+
+    private func updateRightButtonTintColor() {
+        rightButton.tintColor = buttonTintColor
     }
 
     private func toggleButtonVisibility() {
