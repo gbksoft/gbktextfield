@@ -80,7 +80,7 @@ $ pod install
 | underlineEditingColor | UIColor | UIColor.blue | Цвет подчеркивания у активного поля | [x] |
 | titleAnimated | Bool | false | Определяет наличие анимации у появления/скрытия тайтла  | [x] |
 | errorAnimated | Bool | false | Определяет наличие анимации у появления/скрытия текста ошибки | [x] |
-| title | String | nil | Текст тайтла | [x] |
+| title | String | nil | Текст тайтла. В случае если placeholder не установлен, в качестве placeholder для неактивного незаполненного поля будет использоваться значение title | [x] |
 | error | String | nil | Текст ошибки. Если `error == nil` то текст ошибки не отображается и подчеркивание имеет цвет по умолчанию | [x] |
 | isInline | Bool | false | Режим отображения поля. [Подробнее](#isInline)  | [x] |
 | inlineFieldOffset | CGFloat | 100 | Определяет ширину тайтла в инлайн режиме | [x] |
@@ -91,6 +91,14 @@ $ pod install
 | placeholderFont | UIFont | nil | Шрифт плейсхолдера. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.systemFontSize` | [-] |
 | errorFont | UIFont | nil | Шрифт  сообщения об ошибке. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
 
+> Все параметры поддерживают глобальное изменение через GBKSoftTextField.appearence()
+
+```swift
+
+GBKSoftTextField.appearence().titleFont = UIFont.systemFont(ofSize: 20)
+GBKSoftTextField.appearence().underlineColor = .green
+
+```
 
 ## Additional Info
 
@@ -113,7 +121,7 @@ $ pod install
 
 ## Delegate 
 
-Для обработки нажатия на кнопку необходимо к полу привязать `textFieldDelegate` класс соответсвующий протоколу `GBKSoftTextFieldDelegate` вместо стандартного `delegate` и `UITextFieldDelegate` соответственно
+Для обработки нажатия на кнопку необходимо к полю привязать `delegate` класс соответсвующий протоколу `GBKSoftTextFieldDelegate` вместо стандартного `UITextFieldDelegate`
 
 #### Xib (рекомендуемый)
 ![Inline example](/Media/delegate1.png)

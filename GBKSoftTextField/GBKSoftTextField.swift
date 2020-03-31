@@ -20,89 +20,83 @@ open class GBKSoftTextField: UITextField {
 
     // MARK: - IBInspectable
 
-    @IBInspectable var textPadding: CGSize = CGSize(width: 0, height: 10)
-    @IBInspectable var errorPadding: CGSize = CGSize(width: 0, height: 10)
+    @IBInspectable dynamic public var textPadding: CGSize = CGSize(width: 0, height: 10)
+    @IBInspectable dynamic public var errorPadding: CGSize = CGSize(width: 0, height: 10)
 
-    @IBInspectable var underlineHeight: CGFloat = 1
-    @IBInspectable var underlineEditingHeight: CGFloat = 2
-    @IBInspectable var underlineErrorHeight: CGFloat = 2
+    @IBInspectable dynamic public var underlineHeight: CGFloat = 1
+    @IBInspectable dynamic public var underlineEditingHeight: CGFloat = 2
+    @IBInspectable dynamic public var underlineErrorHeight: CGFloat = 2
 
-    @IBInspectable var placeholderColor: UIColor = .gray {
+    @IBInspectable dynamic public var placeholderColor: UIColor = .gray {
         didSet {
             updatePlaceholderColor()
         }
     }
-    @IBInspectable var titleColor: UIColor = .gray {
+    @IBInspectable dynamic public var titleColor: UIColor = .gray {
         didSet {
             updateTitleColor()
         }
     }
-    @IBInspectable var errorColor: UIColor = .red {
+    @IBInspectable dynamic public var errorColor: UIColor = .red {
         didSet {
             layoutUnderline()
         }
     }
-    @IBInspectable var underlineColor: UIColor = .gray {
+    @IBInspectable dynamic public var underlineColor: UIColor = .gray {
         didSet {
             updateErrorColor()
             layoutUnderline()
         }
     }
-    @IBInspectable var underlineEditingColor: UIColor = .blue {
+    @IBInspectable dynamic public var underlineEditingColor: UIColor = .blue {
         didSet {
             layoutUnderline()
         }
     }
 
-    @IBInspectable var titleAnimated: Bool = false
-    @IBInspectable var errorAnimated: Bool = false
+    @IBInspectable dynamic public var titleAnimated: Bool = false
+    @IBInspectable dynamic public var errorAnimated: Bool = false
 
-    @IBInspectable var title: String? {
+    @IBInspectable dynamic public var title: String? {
         didSet {
             updateTitleText()
         }
     }
 
-    @IBInspectable var error: String? {
+    @IBInspectable dynamic public var error: String? {
         didSet {
             updateErrorText()
             layoutErrorLabel(animated: errorAnimated)
         }
     }
 
-    @IBInspectable var isInline: Bool = false
+    @IBInspectable dynamic public var isInline: Bool = false
 
-    @IBInspectable var inlineFieldOffset: CGFloat = 100
+    @IBInspectable dynamic public var inlineFieldOffset: CGFloat = 100
 
-    @IBInspectable var buttonVisible: Bool = false {
+    @IBInspectable dynamic public var buttonVisible: Bool = false {
         didSet { toggleButtonVisibility() }
     }
-    @IBInspectable var buttonImage: UIImage? {
+    @IBInspectable dynamic public var buttonImage: UIImage? {
         didSet { updateRightButtonImage() }
     }
-    @IBInspectable var buttonTintColor: UIColor = .gray {
+    @IBInspectable dynamic public var buttonTintColor: UIColor = .gray {
         didSet { updateRightButtonTintColor() }
     }
 
-    @IBOutlet public weak var textFieldDelegate: GBKSoftTextFieldDelegate? {
-        didSet {
-            self.delegate = textFieldDelegate
-        }
-    }
-
-    public var titleFont: UIFont? {
+    @objc dynamic public var titleFont: UIFont? {
         didSet {
             updateTitleFont()
         }
     }
 
-    public var placeholderFont: UIFont? {
+    @objc dynamic public var placeholderFont: UIFont? {
         didSet {
             updatePlaceholderFont()
         }
     }
 
-    public var errorFont: UIFont? {
+    @objc dynamic public var errorFont: UIFont? {
         didSet {
             updateErrorFont()
         }
@@ -259,7 +253,7 @@ extension GBKSoftTextField {
         self.currentPlaceholderFont = placeholderFont ?? defaultPlaceholderFont
         self.currentErrorFont = errorFont ?? defaultErrorFont
         self.titleFont = titleFont ?? defaultTitleFont
-        self.currentPlaceholder = placeholder
+        self.currentPlaceholder = placeholder ?? title
         self.hasPlaceholder = placeholder != nil
     }
 
@@ -341,6 +335,10 @@ extension GBKSoftTextField {
     }
 
     private func updateTitleText() {
+        if !hasPlaceholder && titleIsHidden {
+            currentPlaceholder = title
+            updateAttributedPlaceholder()
+        }
         titleLabel.text = title
         titleLabel.sizeToFit()
         invalidateIntrinsicContentSize()
@@ -452,6 +450,7 @@ extension GBKSoftTextField {
     private func setupErrorLabel() {
         errorLabel.numberOfLines = 0
         errorLabel.font = currentErrorFont
+        errorLabel.clipsToBounds = false
         updateErrorColor()
         errorLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         errorLabel.setContentHuggingPriority(.required, for: .vertical)
@@ -589,7 +588,7 @@ extension GBKSoftTextField {
     }
 
     @objc private func didTapButton(sender: AnyObject) {
-        self.textFieldDelegate?.textFieldDidTapButton?(self)
+        (self.delegate as? GBKSoftTextFieldDelegate)?.textFieldDidTapButton?(self)
     }
 
     private func setupRightButtonConstraints() {
