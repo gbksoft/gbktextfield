@@ -253,7 +253,7 @@ extension GBKSoftTextField {
         self.currentPlaceholderFont = placeholderFont ?? defaultPlaceholderFont
         self.currentErrorFont = errorFont ?? defaultErrorFont
         self.titleFont = titleFont ?? defaultTitleFont
-        self.currentPlaceholder = placeholder ?? title
+        self.currentPlaceholder = placeholder ?? (isInline ? nil : title)
         self.hasPlaceholder = placeholder != nil
     }
 
@@ -335,7 +335,7 @@ extension GBKSoftTextField {
     }
 
     private func updateTitleText() {
-        if !hasPlaceholder && titleIsHidden {
+        if !hasPlaceholder && titleIsHidden && !isInline {
             currentPlaceholder = title
             updateAttributedPlaceholder()
         }
@@ -385,6 +385,8 @@ extension GBKSoftTextField {
         } else {
             if !isInline {
                 hideTitleLabel(animated: animated)
+            } else {
+                showTitleLabel(animated: animated)
             }
         }
     }
@@ -421,7 +423,7 @@ extension GBKSoftTextField {
             return
         }
 
-        if !hasPlaceholder {
+        if !hasPlaceholder && !isInline {
             currentPlaceholder = title
         }
 
