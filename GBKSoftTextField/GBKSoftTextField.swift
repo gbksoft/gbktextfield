@@ -29,36 +29,43 @@ open class GBKSoftTextField: UITextField {
 
     @IBInspectable dynamic public var placeholderColor: UIColor = .gray {
         didSet {
+            if !setupCompleted {return}
             updatePlaceholderColor()
         }
     }
     @IBInspectable dynamic public var titleColor: UIColor = .gray {
         didSet {
+            if !setupCompleted {return}
             updateTitleColor()
         }
     }
     @IBInspectable dynamic public var errorColor: UIColor = .red {
         didSet {
+            if !setupCompleted {return}
             layoutUnderline()
         }
     }
     @IBInspectable dynamic public var underlineColor: UIColor = .gray {
         didSet {
+            if !setupCompleted {return}
             updateErrorColor()
             layoutUnderline()
         }
     }
     @IBInspectable dynamic public var underlineEditingColor: UIColor = .blue {
         didSet {
+            if !setupCompleted {return}
             layoutUnderline()
         }
     }
 
+    @IBInspectable dynamic public var clearErrorOnFocus: Bool = true
     @IBInspectable dynamic public var titleAnimated: Bool = false
     @IBInspectable dynamic public var errorAnimated: Bool = false
 
     @IBInspectable dynamic public var title: String? {
         didSet {
+            if !setupCompleted {return}
             updateTitleText()
         }
     }
@@ -70,40 +77,52 @@ open class GBKSoftTextField: UITextField {
         }
     }
 
-    @IBInspectable dynamic public var isInline: Bool = false
+    @IBInspectable dynamic public var isInline: Bool = false {
+        didSet { print("isInline:", isInline) }
+    }
 
     @IBInspectable dynamic public var inlineFieldOffset: CGFloat = 100
 
     @IBInspectable dynamic public var buttonVisible: Bool = false {
-        didSet { toggleButtonVisibility() }
+        didSet {
+            toggleButtonVisibility()
+        }
     }
     @IBInspectable dynamic public var buttonImage: UIImage? {
-        didSet { updateRightButtonImage() }
+        didSet {
+            updateRightButtonImage()
+        }
     }
     @IBInspectable dynamic public var buttonTintColor: UIColor = .gray {
-        didSet { updateRightButtonTintColor() }
+        didSet {
+            updateRightButtonTintColor()
+        }
     }
 
     @objc dynamic public var titleFont: UIFont? {
         didSet {
+            if !setupCompleted {return}
             updateTitleFont()
         }
     }
 
     @objc dynamic public var placeholderFont: UIFont? {
         didSet {
+            if !setupCompleted {return}
             updatePlaceholderFont()
         }
     }
 
     @objc dynamic public var errorFont: UIFont? {
         didSet {
+            if !setupCompleted {return}
             updateErrorFont()
         }
     }
 
     override public var placeholder: String? {
         didSet {
+            if !setupCompleted {return}
             currentPlaceholder = placeholder
             hasPlaceholder = placeholder != nil
             updateAttributedPlaceholder()
@@ -112,6 +131,7 @@ open class GBKSoftTextField: UITextField {
 
     override public var font: UIFont? {
         didSet {
+            if !setupCompleted {return}
             updateErrorLabelPosition()
             updateFonts()
         }
@@ -123,7 +143,7 @@ open class GBKSoftTextField: UITextField {
 
     private var placeholderAnimating: Bool = false
     private var placehoderLabelTopConstraint: NSLayoutConstraint!
-    private var hasPlaceholder: Bool = false
+    private var hasPlaceholder: Bool = true
 
     private var errorAnimating: Bool = false
     private var errorLabelTopConstraint: NSLayoutConstraint!
@@ -134,6 +154,8 @@ open class GBKSoftTextField: UITextField {
     private var currentErrorFont: UIFont?
 
     private var currentPlaceholder: String?
+
+    private var setupCompleted = false
 
     // MARK: - Computed
 
@@ -179,6 +201,16 @@ open class GBKSoftTextField: UITextField {
         setupView()
     }
 
+    open override func awakeFromNib() {
+        super.awakeFromNib()
+        setupPlaceholder()
+    }
+
+    open override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        setupPlaceholder()
+    }
+
     override public func layoutSubviews() {
         layoutUnderline()
         layoutTitleLabel(animated: titleAnimated)
@@ -197,12 +229,13 @@ extension GBKSoftTextField {
         var left: CGFloat
         var top: CGFloat
         var width: CGFloat = rect.size.width
+        let currentPlaceholderLineHeight = currentPlaceholderFont?.lineHeight ?? 0
         if isInline {
-            top = (currentPlaceholderFont!.lineHeight - font!.lineHeight)
+            top = (currentPlaceholderLineHeight - font!.lineHeight)
             left = inlineFieldOffset
             width -= left
         } else {
-            top = ceil(textPadding.height) + currentPlaceholderFont!.lineHeight
+            top = ceil(textPadding.height) + currentPlaceholderLineHeight
             left = rect.origin.x
         }
         left += textPadding.width
@@ -245,16 +278,21 @@ extension GBKSoftTextField {
         setupTitleLabel()
         setupErrorLabel()
         setupRightButton()
+    }
+
+    private func setupPlaceholder() {
+        self.currentPlaceholder = placeholder ?? (isInline ? nil : title)
+        self.hasPlaceholder = placeholder != nil
+        updateTitleText()
         updateAttributedPlaceholder()
         invalidateIntrinsicContentSize()
+        setupCompleted = true
     }
 
     private func setupDefaults() {
         self.currentPlaceholderFont = placeholderFont ?? defaultPlaceholderFont
         self.currentErrorFont = errorFont ?? defaultErrorFont
         self.titleFont = titleFont ?? defaultTitleFont
-        self.currentPlaceholder = placeholder ?? (isInline ? nil : title)
-        self.hasPlaceholder = placeholder != nil
     }
 
     private func setupTextField() {
@@ -265,7 +303,9 @@ extension GBKSoftTextField {
     }
 
     @objc func didFocused(_ sender: AnyObject) {
-        self.error = nil
+        if clearErrorOnFocus {
+            self.error = nil
+        }
     }
 
     private func updateFonts() {
@@ -526,7 +566,7 @@ extension GBKSoftTextField {
 
         guard animated else {
             errorLabel.alpha = 1
-            errorLabelTopConstraint.constant = topErrorPadding(hidden: false)
+            errorLabelTopConstraint?.constant = topErrorPadding(hidden: false)
             updateErrorHeightConstraint(hidden: false)
             return
         }

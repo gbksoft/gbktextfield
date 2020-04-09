@@ -87,6 +87,7 @@ $ pod install
 | buttonVisible | Bool | false | Определяет видимость кнопки справа | [x] |
 | buttonImage | UIImage | nil | Иконка кнопки | [x] |
 | buttonTintColor | UIColor | UIColor.gray | Цвет иконки. Изображение рисуется в режиме template | [x] |
+| clearErrorOnFocus | Bool | true | Очищать ли при фокусе поля текст ошибки | [x] |
 | titleFont | UIFont | nil | Шрифт тайтла. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
 | placeholderFont | UIFont | nil | Шрифт плейсхолдера. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.systemFontSize` | [-] |
 | errorFont | UIFont | nil | Шрифт  сообщения об ошибке. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
