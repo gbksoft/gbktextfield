@@ -218,6 +218,8 @@ open class GBKSoftTextField: UITextField {
         super.layoutSubviews()
     }
 
+    open func setupParams() {}
+
 }
 
 // MARK: - UITextField
@@ -272,6 +274,7 @@ extension GBKSoftTextField {
 extension GBKSoftTextField {
 
     private func setupView() {
+        setupParams()
         setupDefaults()
         setupTextField()
         setupUnderline()
