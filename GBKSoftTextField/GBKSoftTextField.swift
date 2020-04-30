@@ -393,7 +393,9 @@ extension GBKSoftTextField {
     }
 
     private func updatePlaceholderColor() {
-        titleLabel.textColor = placeholderColor
+        if attributedPlaceholder != nil {
+            updateAttributedPlaceholder()
+        }
     }
 
     private func setupTitleConstraints() {
