@@ -33,7 +33,7 @@ platform :ios, '10.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'GBKSoftTextField', :git => 'git@gitlab.gbksoft.net:korzh-aa/gbksofttextfield.git'
+    pod 'GBKSoftTextField', :git => 'git@gitlab.gbksoft.net:gbksoft-mobile-department/ios/gbksofttextfield.git'
 end
 ```
 
