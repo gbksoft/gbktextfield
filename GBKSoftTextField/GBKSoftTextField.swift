@@ -35,7 +35,6 @@ open class GBKSoftTextField: UITextField {
     }
     @IBInspectable dynamic public var titleColor: UIColor = .gray {
         didSet {
-            if !setupCompleted {return}
             updateTitleColor()
         }
     }
@@ -363,6 +362,7 @@ extension GBKSoftTextField {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textAlignment = textAlignment
         titleLabel.font = currentTitleFont
+        titleLabel.textColor = titleColor
         updateTitleText()
         updateTitleColor()
         addSubview(titleLabel)

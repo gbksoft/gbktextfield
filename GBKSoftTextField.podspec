@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "GBKSoftTextField"
-  spec.version      = "0.0.6"
+  spec.version      = "0.0.7"
   spec.summary      = "Material like UITextField for GBKSoft iOS team needs"
   spec.license      = "MIT"
   spec.author       = { "Artem Korzh" => "korzh.aa@gbksoft.com" }
