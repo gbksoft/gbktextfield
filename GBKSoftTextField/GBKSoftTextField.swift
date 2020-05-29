@@ -425,7 +425,7 @@ extension GBKSoftTextField {
 
     private func layoutTitleLabel(animated: Bool) {
         if shouldShowTitle {
-            updatePlaceholderColor()
+            updateTitleColor()
             showTitleLabel(animated: animated)
         } else {
             if !isInline {
