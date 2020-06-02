@@ -80,7 +80,9 @@ open class GBKSoftTextField: UITextField {
         didSet { print("isInline:", isInline) }
     }
 
-    @IBInspectable dynamic public var inlineFieldOffset: CGFloat = 100
+    @IBInspectable dynamic public var inlineFieldOffset: CGFloat = 100 {
+        didSet { setupTitleConstraints() }
+    }
 
     @IBInspectable dynamic public var buttonVisible: Bool = false {
         didSet {
@@ -274,6 +276,7 @@ extension GBKSoftTextField {
 
     private func setupView() {
         setupParams()
+        updateFonts()
         setupDefaults()
         setupTextField()
         setupUnderline()
