@@ -2,7 +2,7 @@
 
 ![Preview](/Media/preview.png)
 
-Реализация UITextField схожий с Material созданный согласно требоний реализуемых в команде проектов 
+Material inspired implementation for UITextField based on design trends used in GBKSoft
 
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -19,22 +19,10 @@
 
 ### CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
-
-```bash
-$ gem install cocoapods
-```
-
-To integrate GBKDevInfoMode into your Xcode project using CocoaPods, specify it in your `Podfile`:
+To integrate GBKSoftTextField into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.0'
-use_frameworks!
-
-target '<Your Target Name>' do
-    pod 'GBKSoftTextField', :git => 'git@gitlab.gbksoft.net:gbksoft-mobile-department/ios/gbksofttextfield.git'
-end
+pod 'GBKSoftTextField', :git => 'git@gitlab.gbksoft.net:gbksoft-mobile-department/ios/gbksofttextfield.git'
 ```
 
 Then, run the following command:
@@ -47,9 +35,9 @@ $ pod install
 
 ### Xib
 
-- Добавить на вью UITextField 
-- В Identity Inspector в качетсве Custom Class указать GBKSoftTextField
-- В Attributes Inspector указать необходимые параметры
+- Add new `UITextField` in Interface Builder
+- Specify `GBKSoftTextField` as Custom Class in Identity Inspector for that field
+- Fill any needed properties in Attributes Inspector
 
 ### Code
 ```swift
@@ -58,7 +46,7 @@ $ pod install
     ...
     let firstNameTextField = GBKSoftTextField()
     firstNameTextField.placeholder = "First Name"
-    ...
+	// TODO: specify any other available properties
     view.addSubview(firstNameTextField)
 ```
 
@@ -68,31 +56,31 @@ $ pod install
 
 | Property | Type | Default value | Description | @IBInspectable |
 | --- | --- | --- | --- | :---: |
-| textPadding | CGSize | (width: 0, height: 10) | Отступы поля ввода от краев | [x] |
-| errorPadding | CGSize | (width: 0, height: 10) | Отступы для текста с ошибкой | [x] |
-| underlineHeight | CGFloat | 1 | Высота подчеркивания по умолчанию | [x] |
-| underlineEditingHeight | CGFloat | 2 | Высота подчеркивания у активного поля | [x] |
-| underlineErrorHeight | CGFloat | 2 | Высота подчеркивания у поля с ошибкой | [x] |
-| placeholderColor | UIColor | UIColor.gray | Цвет плейсхолдера для поля | [x] |
-| titleColor | UIColor | UIColor.gray | Цвет тайтла для поля | [x] |
-| errorColor | UIColor | UIColor.red | Цвет текста сообщения об ошибке и подчеркивания у поля с ошибкой | [x] |
-| underlineColor | UIColor | UIColor.gray | Цвет подчеркивания по умолчанию | [x] |
-| underlineEditingColor | UIColor | UIColor.blue | Цвет подчеркивания у активного поля | [x] |
-| titleAnimated | Bool | false | Определяет наличие анимации у появления/скрытия тайтла  | [x] |
-| errorAnimated | Bool | false | Определяет наличие анимации у появления/скрытия текста ошибки | [x] |
-| title | String | nil | Текст тайтла. В случае если placeholder не установлен, в качестве placeholder для неактивного незаполненного поля будет использоваться значение title | [x] |
-| error | String | nil | Текст ошибки. Если `error == nil` то текст ошибки не отображается и подчеркивание имеет цвет по умолчанию | [x] |
-| isInline | Bool | false | Режим отображения поля. [Подробнее](#isInline)  | [x] |
-| inlineFieldOffset | CGFloat | 100 | Определяет ширину тайтла в инлайн режиме | [x] |
-| buttonVisible | Bool | false | Определяет видимость кнопки справа | [x] |
-| buttonImage | UIImage | nil | Иконка кнопки | [x] |
-| buttonTintColor | UIColor | UIColor.gray | Цвет иконки. Изображение рисуется в режиме template | [x] |
-| clearErrorOnFocus | Bool | true | Очищать ли при фокусе поля текст ошибки | [x] |
-| titleFont | UIFont | nil | Шрифт тайтла. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
-| placeholderFont | UIFont | nil | Шрифт плейсхолдера. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.systemFontSize` | [-] |
-| errorFont | UIFont | nil | Шрифт  сообщения об ошибке. По умолчанию применяется шрифт установленный для текстового поля с размером `UIFont.labelFontSize` | [-] |
+| textPadding | CGSize | (width: 0, height: 10) | Horizontal and vertical edge insets for input field | :heavy_check_mark: |
+| errorPadding | CGSize | (width: 0, height: 10) | Horizontal and vertical edge insets for input field | :heavy_check_mark: |
+| underlineHeight | CGFloat | 1 | Height of underline for unfocused state  | :heavy_check_mark: |
+| underlineEditingHeight | CGFloat | 2 | Height of underline for focused state | :heavy_check_mark: |
+| underlineErrorHeight | CGFloat | 2 | Height of underline for field when error displayed | :heavy_check_mark: |
+| placeholderColor | UIColor | UIColor.gray | Placeholder color | :heavy_check_mark: |
+| titleColor | UIColor | UIColor.gray | Title color | :heavy_check_mark: |
+| errorColor | UIColor | UIColor.red | Color for error message and underline when error displayed | :heavy_check_mark: |
+| underlineColor | UIColor | UIColor.gray | Underline color for unfocused state | :heavy_check_mark: |
+| underlineEditingColor | UIColor | UIColor.blue | Underline color for focused state | :heavy_check_mark: |
+| titleAnimated | Bool | false | Define if title position animated when field change focus state  | :heavy_check_mark: |
+| errorAnimated | Bool | false | Define if error message appear animated | :heavy_check_mark: |
+| title | String | nil | Title of the field. If no placeholder provided it will be used as placeholder | :heavy_check_mark: |
+| error | String | nil | Error message. Error message shown and underline changed color only if `error != nil` | :heavy_check_mark: |
+| isInline | Bool | false | Field display mode. [More](#isInline)  | :heavy_check_mark: |
+| inlineFieldOffset | CGFloat | 100 | Title width for inline mode | :heavy_check_mark: |
+| buttonVisible | Bool | false | Right button visibility | :heavy_check_mark: |
+| buttonImage | UIImage | nil | Right button icon | :heavy_check_mark: |
+| buttonTintColor | UIColor | UIColor.gray | Right button icon tint color. Provided image always render as `template` | :heavy_check_mark: |
+| clearErrorOnFocus | Bool | true | Define if error should disappear on field become first responder | :heavy_check_mark: |
+| titleFont | UIFont | nil | Title font. By default will be used field font with `UIFont.labelFontSize` | :x: |
+| placeholderFont | UIFont | nil | Placeholder font. By default will be used field font with `UIFont.systemFontSize` | :x: |
+| errorFont | UIFont | nil | Error message font. By default will be used field font with `UIFont.labelFontSize` | :x: |
 
-> Все параметры поддерживают глобальное изменение через GBKSoftTextField.appearence()
+> All properties can be set globally for GBKSoftTextField.appearence()
 
 ```swift
 
@@ -105,26 +93,25 @@ GBKSoftTextField.appearence().underlineColor = .green
 
 ### isInline 
 
-Параметр `isInline` определяет внешний вид поля и его поведение
+Property `isInline` define appearance and behaviour of the field
 
 #### isInline == false (default)
 
 ![Default example](/Media/example-default.png)
 
-По умолчанию у незаполненного поля видим только плейсхолдер и подчеркивание. При изменении значения поля плейсхолдер скрывается и появляется тайтл. Тайтл и полея для ввода расположены один над другим вертикально
-
+By default for empty field only placeholder and underline are displayed. On focus and when text is not empty placeholder will be hidden and title appear. Title and field stacked vertically
 #### isInline == true
 
 ![Inline example](/Media/example-inline.png)
 
-В инлайн режиме плейсхолдер/тайтл неподвижен. Тайтл и поле для ввода один за другим горизонтально
+In inline mode title position is fixed for any state. Title and field stacked horizontally 
 
 
 ## Delegate 
 
-Для обработки нажатия на кнопку необходимо к полю привязать `delegate` класс соответсвующий протоколу `GBKSoftTextFieldDelegate` вместо стандартного `UITextFieldDelegate`
+In case you need to handle right button tap you should assign `GBKSoftTextFieldDelegate` as field delegate instead default  `UITextFieldDelegate`
 
-#### Xib (рекомендуемый)
+#### Xib (recommended)
 ![Inline example](/Media/delegate1.png)
 ![Inline example](/Media/delegate2.png)
 
@@ -141,12 +128,12 @@ GBKSoftTextField.appearence().underlineColor = .green
     }
 ```
 
-Помимо стандартным методов (`UITextFieldDelegate`) этот протокол содержит метод 
+In addition to default functions of `UITextFieldDelegate` this protocol provide next one
 ```swift
 func textFieldDidTapButton(_ textField: UITextField)
 ```
-который вызывается по нажатию на кнопку
+that will be called when user tapped right button
 
 ## ToDo
 
-- [ ] добавить поддержку многострочности путем наследования от UITextView
+- [ ] add multiline support by inheritance from UITextView
